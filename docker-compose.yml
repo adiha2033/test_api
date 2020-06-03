@@ -12,7 +12,8 @@ services:
 
   api:
     build: 
-      dockerfile: .
+      context: .
+      dockerfile: DockerFile
       ports: 
         - 80:80
       depends_on: 

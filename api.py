@@ -11,9 +11,9 @@ log_handler = logging.StreamHandler()
 log_format = logging.Formatter('%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s')
 log_handler.setFormatter(log_format)
 logger.addHandler(log_handler)
-logger.setLevel(logging.INFO)
+logger.setLevel(logginINFO)
 
-def Get_Location(ip):
+def Get_Location(ip):g.
     """
     Get Location from IP address by using IPStack api
     :param ip: remote ip address
@@ -33,27 +33,18 @@ def Get_Location(ip):
 def Write_To_Elasticsearch(obj):
 
     es = Elasticsearch(
-        hosts=['localhost'],
+        hosts=['10.0.0.181'],
         port=9200
     )
-    try:
-        es.indices.create(index="api", ignore=400)
-        es_response = es.index(
-            index="api",
-            doc_type="person",
-            id=uuid.uuid4(),
-            body=obj)
-        
-        if es_response['_shards']['successful'] == 1:
-            logger.info("object write to Elasticsearch ...")
-            return  0
-        else:
-            logger.warn("obejct deos not write to Elasticsearch !!!")
-            return 100
-    
-    except Exception as ex:
-        logger.error(f"please check error: {ex}")
-        return 100
+
+    es.indices.create(index="api", ignore=400)
+    es_response = es.index(
+        index="api",
+        id=uuid.uuid4(),
+        body=obj)
+    print(es_response['result'])
+
+    return es_response
 
 
 @app.route('/tracking', methods=['GET', 'POST'])

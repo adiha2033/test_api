@@ -30,22 +30,6 @@ def Get_Location(ip):
         logger.info(f"Doesn't get Client location, please see HTTP Error {response_location.status_code}")
     return response_location
 
-def Write_To_Elasticsearch(obj):
-    
-    es = Elasticsearch(
-        hosts=['localhost'],
-        port=9200
-    )
-
-    es.indices.create(index="api", ignore=400)
-    es_response = es.index(
-        index="api",
-        id=uuid.uuid4(),
-        body=obj
-    )
-
-    return es_response
-
 @app.route('/tracking', methods=['GET', 'POST'])
 def tracking():
     product_type = request.args.get('type')
@@ -66,10 +50,21 @@ def tracking():
         "client_continent":  Location.json()["continent_name"],
         "client_country": Location.json()["country_name"]
     }
-    logger.info("Json Output was created ")
-    Elastic_response = Write_To_Elasticsearch(Jout)
+    logger.info(f"Jout was created")
 
-    if Elastic_response['results'] == 'created':
+    es = Elasticsearch(
+        hosts=['localhost'],
+        port=9200
+    )
+
+    es.indices.create(index="api", ignore=400)
+    es_response = es.index(
+        index="api",
+        id=uuid.uuid4(),
+        body=Jout
+    )
+
+    if es_response['results'] == 'created':
         logger.info("Object was wrote to Elastic")
 
     return json.dumps(Jout, sort_keys=True, indent=4)

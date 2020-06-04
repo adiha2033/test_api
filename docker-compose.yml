@@ -14,7 +14,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-      image: api:1.0
+    image: api:1.0
     container_name: api
     ports: 
       - 80:80

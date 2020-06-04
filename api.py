@@ -32,20 +32,17 @@ def Get_Location(ip):
 
 def Write_To_Elasticsearch(obj):
     
-    try:
-        es = Elasticsearch(
-            hosts=['localhost'],
-            port=9200
-        )
+    es = Elasticsearch(
+        hosts=['localhost'],
+        port=9200
+    )
 
-        es.indices.create(index="api", ignore=400)
-        es_response = es.index(
-            index="api",
-            id=uuid.uuid4(),
-            body=obj)
-            
-    except Exception as ex:
-        logger.warn(f"Elasticsearch error: {ex}")
+    es.indices.create(index="api", ignore=400)
+    es_response = es.index(
+        index="api",
+        id=uuid.uuid4(),
+        body=obj
+    )
 
     return es_response
 
@@ -72,7 +69,7 @@ def tracking():
     logger.info("Json Output was created ")
     Elastic_response = Write_To_Elasticsearch(Jout)
 
-    if Elastic_response == 0:
+    if Elastic_response['results'] == 'created':
         logger.info("Object was wrote to Elastic")
 
     return json.dumps(Jout, sort_keys=True, indent=4)

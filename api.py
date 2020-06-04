@@ -74,6 +74,7 @@ def tracking():
         "client_country": Location.json()["country_name"]
     }
     logger.info("Json Output was created ")
+    Write_To_Elasticsearch(Jout)
 
     return json.dumps(Jout, sort_keys=True, indent=4)
 

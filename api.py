@@ -85,4 +85,4 @@ def tracking():
     return json.dumps(Jout, sort_keys=True, indent=4)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80, debug=True, thread=True)
+    app.run(host="0.0.0.0", port=80, debug=True, threaded=True)

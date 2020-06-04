@@ -46,11 +46,14 @@ def Write_To_Elasticsearch(obj):
         
         if es_response['_shards']['successful'] == 1:
             logger.info("object write to Elasticsearch ...")
+            return  0
         else:
             logger.warn("obejct deos not write to Elasticsearch !!!")
+            return 100
     
     except Exception as ex:
         logger.error(f"please check error: {ex}")
+        return 100
 
 
 @app.route('/tracking', methods=['GET', 'POST'])
@@ -74,7 +77,10 @@ def tracking():
         "client_country": Location.json()["country_name"]
     }
     logger.info("Json Output was created ")
-    Write_To_Elasticsearch(Jout)
+    Elastic_response = Write_To_Elasticsearch(Jout)
+
+    if Elastic_response == 0:
+        logger.info("Object was wrote to Elastic")
 
     return json.dumps(Jout, sort_keys=True, indent=4)
 

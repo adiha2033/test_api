@@ -13,7 +13,7 @@ services:
   api:
     build: 
       context: .
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     container_name: api
     ports: 
       - 80:80

@@ -32,7 +32,7 @@ def Get_Location(ip):
 def Write_To_Elasticsearch(obj):
     
     es = Elasticsearch(
-        hosts=['localhost'],
+        hosts=['elasticsearch'],
         port=9200
     )
 

@@ -14,10 +14,12 @@ services:
     build: 
       context: .
       dockerfile: DockerFile
-      ports: 
-        - 80:80
-      depends_on: 
-        - elasticsearch
+    container_name: api
+    ports: 
+      - 80:80
+    depends_on: 
+      - elasticsearch
+    
 volumes: 
   data:
 

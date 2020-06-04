@@ -3,6 +3,7 @@ import logging
 import json
 import requests
 from elasticsearch import Elasticsearch
+import uuid
 
 app = Flask(__name__)
 logger = logging.getLogger(__name__)
@@ -35,6 +36,21 @@ def Write_To_Elasticsearch(obj):
         hosts=['localhost'],
         port=9200
     )
+    try:
+        es.indices.create(index="api", ignore=400)
+        es_response = es.index(
+            index="api",
+            doc_type="person",
+            id=uuid.uuid4(),
+            body=obj)
+        
+        if es_response['_shards']['successful'] == 1:
+            logger.info("object write to Elasticsearch ...")
+        else:
+            logger.warn("obejct deos not write to Elasticsearch !!!")
+    
+    except Exception as ex:
+        logger.error(f"please check error: {ex}")
 
 
 @app.route('/tracking', methods=['GET', 'POST'])
@@ -62,4 +78,4 @@ def tracking():
     return json.dumps(Jout, sort_keys=True, indent=4)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="0.0.0.0", port=80, debug=True, thread=True)
